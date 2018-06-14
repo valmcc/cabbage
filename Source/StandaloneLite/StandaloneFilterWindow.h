@@ -48,8 +48,12 @@
 */
 class StandaloneFilterWindow    : public DocumentWindow,
     public Button::Listener,
-    public Timer
+    public Timer,
+    private FilenameComponentListener
 {
+        //TextButton fileopenButton;
+    FilenameComponent fileChooser { "File", {}, true, false, false, "*.csd;*.*;*", {},
+        "Choose a .csd file to open in Cabage" };
 public:
     //==============================================================================
     typedef StandalonePluginHolder::PluginInOuts PluginInOuts;
@@ -72,9 +76,10 @@ public:
           optionsButton ("Options")
     {
         setTitleBarButtonsRequired (DocumentWindow::minimiseButton | DocumentWindow::closeButton, false);
-
+        
         Component::addAndMakeVisible (optionsButton);
         optionsButton.addListener (this);
+        
         optionsButton.setTriggeredOnMouseDown (true);
         pluginHolder = new StandalonePluginHolder (settingsToUse, takeOwnershipOfSettings,
                                                    preferredDefaultDeviceName, preferredSetupOptions,
@@ -85,6 +90,9 @@ public:
         setFullScreen (true);
         setContentOwned (new MainContentComponent (*this), false);
         Desktop::getInstance().setKioskModeComponent (this, false);
+        Component::addAndMakeVisible(fileChooser);
+        fileChooser.addListener (this);
+        //fileopenButton.addListener (this);
 #else
         setContentOwned (new MainContentComponent (*this), true);
 
@@ -159,37 +167,45 @@ public:
         pluginHolder->stopPlaying();
         
 #ifdef JUCE_IOS
-        const String csdText = "<Cabbage>\n"
-        "form size(1000, 800), colour(\"red)\n"
-        "label bounds(10, 10, 800, 200), text(\"Hello\")\n"
-        "</Cabbage>\n"
-        "<CsoundSynthesizer>\n"
-        "<CsOptions>\n"
-        "-odac\n"
-        "</CsOptions>\n"
-        "<CsInstruments>\n"
-        "sr = 44100\n"
-        "ksmps = 64\n"
-        "nchnls = 2\n"
-        "0dbfs = 1\n"
-        "\n"
-        "instr 1\n"
-        "a1 oscili 1, 400\n"
-        "outs a1, a1  \n"
-        "endin\n"
-        "\n"
-        "</CsInstruments>\n"
-        "<CsScore>\n"
-        "i1 0 z\n"
-        "</CsScore>\n"
-        "</CsoundSynthesizer>";
-        File tempFile(File::getSpecialLocation(File::SpecialLocationType::tempDirectory).getFullPathName()+"test.csd");
-        tempFile.replaceWithText(csdText);
-        CabbageUtilities::debug(tempFile.loadFileAsString());
-        resetPlugin(tempFile);
+//        const String csdText = "<Cabbage>\n"
+//        "form size(380, 160), caption(\"Simple synth\"), pluginid(\"plu1\")\n"
+//        "keyboard bounds(12, 6, 360, 100)\n"
+//        "</Cabbage>\n"
+//        "<CsoundSynthesizer>\n"
+//        "<CsOptions>\n"
+//        "-n -d -+rtmidi=NULL -M0 --midi-key-cps=4 --midi-velocity-amp=5\n"
+//        "</CsOptions>\n"
+//        "<CsInstruments>\n"
+//        "sr = 44100\n"
+//        "ksmps = 64\n"
+//        "nchnls = 2\n"
+//        "0dbfs=1\n"
+//        "\n"
+//        "instr 1\n"
+//        "a1 oscili p5, p4, 1\n"
+//        "outs a1, a1\n"
+//        "endin\n"
+//        "\n"
+//        "</CsInstruments>  \n"
+//        "<CsScore>\n"
+//        "f1 0 1024 10 1\n"
+//        "f0 3600\n"
+//        "</CsScore>";
+//        File tempFile(File::getSpecialLocation(File::SpecialLocationType::tempDirectory).getFullPathName()+"test.csd");
+//        tempFile.replaceWithText(csdText);
+//        CabbageUtilities::debug(tempFile.loadFileAsString());
+//        resetPlugin(tempFile);
 #endif
     }
 
+    //==============================================================================
+    void filenameComponentChanged (FilenameComponent* comp) override
+    {
+        CabbageUtilities::debug(comp->getCurrentFile().getFullPathName());
+        #if JUCE_IOS || JUCE_ANDROID
+        resetPlugin(comp->getCurrentFile());
+        #endif
+    }
     const String getPluginId (File csdFile)
     {
         StringArray csdLines;
@@ -204,7 +220,7 @@ public:
                 return CabbageWidgetData::getStringProp (temp, CabbageIdentifierIds::pluginid);
         }
 
-        return String::empty;
+        return String();
     }
 
     ~StandaloneFilterWindow()
@@ -283,6 +299,11 @@ public:
 
     void buttonClicked (Button*) override
     {
+#if JUCE_IOS || JUCE_ANDROID
+        
+        
+        return;
+#endif
         PopupMenu m;
         m.addItem (1, TRANS ("Audio/MIDI Settings..."));
         m.addSeparator();
@@ -391,6 +412,9 @@ public:
     {
         DocumentWindow::resized();
         optionsButton.setBounds (8, 6, 60, getTitleBarHeight() - 8);
+#if JUCE_IOS || JUCE_ANDROID
+        fileChooser.setBounds(getLocalBounds().getWidth()/2 - 200, getLocalBounds().getHeight()*.8f, 400, 50);
+#endif
     }
 
     virtual StandalonePluginHolder* getPluginHolder()    { return pluginHolder; }
@@ -444,7 +468,7 @@ private:
         {
             g.fillAll (Colour (50, 50, 50));
             const Image cabbageLogo = ImageCache::getFromMemory (CabbageBinaryData::CabbageLogoBig_png, CabbageBinaryData::CabbageLogoBig_pngSize);
-            g.drawImage (cabbageLogo, getLocalBounds().toFloat(), RectanglePlacement::Flags::stretchToFit);
+            g.drawImage (cabbageLogo, getLocalBounds().reduced(getLocalBounds().getWidth()/3, getLocalBounds().getHeight()/3).toFloat(), RectanglePlacement::Flags::stretchToFit);
         }
 
         void resized() override
