@@ -3,7 +3,8 @@
 <JUCERPROJECT id="id6VOA" name="CabbageLite" displaySplashScreen="1" reportAppUsage="1"
               splashScreenColour="Dark" projectType="guiapp" version="1.0.0"
               bundleIdentifier="com.yourcompany.CabbageLite" includeBinaryInAppConfig="1"
-              cppLanguageStandard="11" jucerVersion="5.2.0" companyCopyright="">
+              cppLanguageStandard="11" jucerVersion="5.3.2" companyCopyright=""
+              pluginFormats="buildStandalone,enableIAA" pluginCharacteristicsValue="pluginIsMidiEffectPlugin,pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn">
   <MAINGROUP id="CfT7TE" name="CabbageLite">
     <GROUP id="{E4950169-7245-8252-D27F-2344F45CAF99}" name="Source">
       <GROUP id="{4AFC1EE2-9934-F4AA-4ECD-50660152DD13}" name="BinaryData">
@@ -297,10 +298,11 @@
         <MODULEPATH id="juce_audio_basics" path="../../juce"/>
       </MODULEPATHS>
     </XCODE_MAC>
-    <XCODE_IPHONE targetFolder="Builds/iOS" iosScreenOrientation="portraitlandscape"
-                  iPadScreenOrientation="portraitlandscape" iosDeviceFamily="1,2"
-                  extraDefs="Cabbage_IDE_Build=1&#10;CABBAGE=1&#10;Cabbage_Lite=1"
-                  externalLibraries="csound&#10;sndfile">
+    <XCODE_IPHONE targetFolder="Builds/iOS" iosScreenOrientation="landscape" iPadScreenOrientation="landscape"
+                  iosDeviceFamily="1,2" extraDefs="Cabbage_IDE_Build=1&#10;CABBAGE=1&#10;Cabbage_Lite=1"
+                  externalLibraries="csound&#10;sndfile" microphonePermissionNeeded="1"
+                  UIFileSharingEnabled="1" UISupportsDocumentBrowser="1" smallIcon="Cl3fhx"
+                  bigIcon="Cl3fhx">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" enablePluginBinaryCopyStep="1" isDebug="1" optimisation="1"
                        linkTimeOptimisation="0" targetName="CabbageLite" libraryPath="/Users/walshr/sourcecode/csound-iOS/libs"
@@ -343,6 +345,8 @@
     <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
     <MODULE id="juce_video" showAllCode="1" useLocalCopy="1" useGlobalPath="0"/>
   </MODULES>
-  <JUCEOPTIONS JUCE_ASIO="enabled" JUCE_WASAPI="enabled" JUCE_ALSA="enabled"
-               JUCE_JACK="enabled"/>
+  <JUCEOPTIONS JUCE_ASIO="1" JUCE_WASAPI="1" JUCE_ALSA="1" JUCE_JACK="1"/>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

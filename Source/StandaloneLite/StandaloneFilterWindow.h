@@ -48,12 +48,11 @@
 */
 class StandaloneFilterWindow    : public DocumentWindow,
     public Button::Listener,
-    public Timer,
-    private FilenameComponentListener
+    public Timer
 {
         //TextButton fileopenButton;
-    FilenameComponent fileChooser { "File", {}, true, false, false, "*.csd;*.*;*", {},
-        "Choose a .csd file to open in Cabage" };
+//    FilenameComponent fileChooser { "File", {}, true, false, false, "*.csd;*.*;*", {},
+//        "Choose a .csd file to open in Cabage" };
 public:
     //==============================================================================
     typedef StandalonePluginHolder::PluginInOuts PluginInOuts;
@@ -73,7 +72,7 @@ public:
                             const AudioDeviceManager::AudioDeviceSetup* preferredSetupOptions = nullptr,
                             const Array<PluginInOuts>& constrainToConfiguration = Array<PluginInOuts> ())
         : DocumentWindow (title, backgroundColour, DocumentWindow::minimiseButton | DocumentWindow::closeButton),
-          optionsButton ("Options")
+          optionsButton ("Options"), outputEditor()
     {
         setTitleBarButtonsRequired (DocumentWindow::minimiseButton | DocumentWindow::closeButton, false);
         
@@ -90,9 +89,6 @@ public:
         setFullScreen (true);
         setContentOwned (new MainContentComponent (*this), false);
         Desktop::getInstance().setKioskModeComponent (this, false);
-        Component::addAndMakeVisible(fileChooser);
-        fileChooser.addListener (this);
-        //fileopenButton.addListener (this);
 #else
         setContentOwned (new MainContentComponent (*this), true);
 
@@ -165,47 +161,11 @@ public:
         }
 
         pluginHolder->stopPlaying();
-        
-#ifdef JUCE_IOS
-//        const String csdText = "<Cabbage>\n"
-//        "form size(380, 160), caption(\"Simple synth\"), pluginid(\"plu1\")\n"
-//        "keyboard bounds(12, 6, 360, 100)\n"
-//        "</Cabbage>\n"
-//        "<CsoundSynthesizer>\n"
-//        "<CsOptions>\n"
-//        "-n -d -+rtmidi=NULL -M0 --midi-key-cps=4 --midi-velocity-amp=5\n"
-//        "</CsOptions>\n"
-//        "<CsInstruments>\n"
-//        "sr = 44100\n"
-//        "ksmps = 64\n"
-//        "nchnls = 2\n"
-//        "0dbfs=1\n"
-//        "\n"
-//        "instr 1\n"
-//        "a1 oscili p5, p4, 1\n"
-//        "outs a1, a1\n"
-//        "endin\n"
-//        "\n"
-//        "</CsInstruments>  \n"
-//        "<CsScore>\n"
-//        "f1 0 1024 10 1\n"
-//        "f0 3600\n"
-//        "</CsScore>";
-//        File tempFile(File::getSpecialLocation(File::SpecialLocationType::tempDirectory).getFullPathName()+"test.csd");
-//        tempFile.replaceWithText(csdText);
-//        CabbageUtilities::debug(tempFile.loadFileAsString());
-//        resetPlugin(tempFile);
-#endif
+
     }
 
     //==============================================================================
-    void filenameComponentChanged (FilenameComponent* comp) override
-    {
-        CabbageUtilities::debug(comp->getCurrentFile().getFullPathName());
-        #if JUCE_IOS || JUCE_ANDROID
-        resetPlugin(comp->getCurrentFile());
-        #endif
-    }
+
     const String getPluginId (File csdFile)
     {
         StringArray csdLines;
@@ -286,7 +246,10 @@ public:
             if (cabbageFiledOpened)
             {
                 if(csoundOutput.length()>0)
+                {
                     outputConsole->setText(csoundOutput);
+                    outputEditor.setText(csoundOutput);
+                }
             }
         }
     }
@@ -349,6 +312,7 @@ public:
     void showOutputConsole()
     {
         outputConsole->setVisible (!outputConsole->isVisible());
+        //setContentOwned(&outputEditor, false);
     }
 
     void handleMenuResult (int result)
@@ -412,9 +376,6 @@ public:
     {
         DocumentWindow::resized();
         optionsButton.setBounds (8, 6, 60, getTitleBarHeight() - 8);
-#if JUCE_IOS || JUCE_ANDROID
-        fileChooser.setBounds(getLocalBounds().getWidth()/2 - 200, getLocalBounds().getHeight()*.8f, 400, 50);
-#endif
     }
 
     virtual StandalonePluginHolder* getPluginHolder()    { return pluginHolder; }
@@ -429,7 +390,7 @@ private:
     {
     public:
         MainContentComponent (StandaloneFilterWindow& filterWindow)
-            : owner (filterWindow), notification (this),
+            : owner (filterWindow), notification (this, owner),
               editor (owner.getAudioProcessor()->createEditorIfNeeded()),
               shouldShowNotification (false)
         {
@@ -485,20 +446,21 @@ private:
         //==============================================================================
         class NotificationArea : public Component
         {
+            StandaloneFilterWindow& owner;
         public:
-            enum { height = 30 };
+            enum { height = 40 };
 
-            NotificationArea (Button::Listener* settingsButtonListener)
-                : notification ("notification", "Audio input is muted to avoid feedback loop"),
+            NotificationArea (Button::Listener* settingsButtonListener, StandaloneFilterWindow& _owner)
+                : notification ("notification", "Audio input is muted to avoid feedback loop"), owner(_owner),
 #if JUCE_IOS || JUCE_ANDROID
-                  settingsButton ("Unmute Input")
+                  settingsButton ("File Menu")
 #else
                   settingsButton ("Settings...")
 #endif
             {
                 setOpaque (true);
 
-                notification.setColour (Label::textColourId, Colours::black);
+                notification.setColour (Label::textColourId, Colours::white);
 
                 settingsButton.addListener (settingsButtonListener);
 
@@ -510,10 +472,10 @@ private:
             {
                 auto r = getLocalBounds();
 
-                g.setColour (Colours::darkgoldenrod);
+                g.setColour (Colour(140, 140, 140));
                 g.fillRect (r.removeFromBottom (1));
 
-                g.setColour (Colours::lightgoldenrodyellow);
+                g.setColour (Colour(20,20,20));
                 g.fillRect (r);
             }
 
@@ -521,7 +483,7 @@ private:
             {
                 auto r = getLocalBounds().reduced (5);
 
-                settingsButton.setBounds (r.removeFromRight (70));
+                settingsButton.setBounds (r.removeFromLeft (70));
                 notification.setBounds (r);
             }
         private:
@@ -544,7 +506,33 @@ private:
         void buttonClicked (Button*) override
         {
 #if JUCE_IOS || JUCE_ANDROID
-            owner.pluginHolder->getMuteInputValue().setValue (false);
+           // owner.pluginHolder->getMuteInputValue().setValue (false);
+            //owner.pluginHolder->showFileMenu();
+            PopupMenu m;
+
+            m.addItem(1, "Open .csd file");
+            m.addItem(2, "Enable audio input");
+            m.addItem(3, "Show  Console");
+            const int result = m.showAt(Rectangle<int>(0,0, 0, 0), 0, 0, 0, 40);
+            
+            if( result == 1)
+            {
+                FileChooser fc ("Open a .csd file", File (""), "*", CabbageUtilities::shouldUseNativeBrowser());
+                
+                if (fc.browseForFileToOpen())
+                {
+                    owner.resetPlugin (fc.getResult());
+                }
+                
+            }
+            else if (result == 2)
+            {
+                owner.pluginHolder->getMuteInputValue().setValue (false);
+            }
+            else if (result == 3)
+            {
+                owner.showOutputConsole();
+            }
 #else
             owner.pluginHolder->showAudioSettingsDialog();
 #endif
@@ -572,6 +560,7 @@ private:
     File csdFile;
     int64 lastModified;
     ScopedPointer<CsoundOutputWindow> outputConsole;
+    CsoundOutputEditor outputEditor;
     bool cabbageFiledOpened = false;
     String csoundOutput;
     PluginExporter pluginExporter;

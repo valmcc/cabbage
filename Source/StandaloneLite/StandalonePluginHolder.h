@@ -11,6 +11,25 @@ CabbagePluginProcessor* JUCE_CALLTYPE createCabbagePluginFilter (File inputFile)
 //==================================================================================
 // Cabbage csound console window
 //==================================================================================
+class CsoundOutputEditor    : public TextEditor
+{
+public:
+    CsoundOutputEditor():TextEditor("")
+    {
+        getLookAndFeel().setColour (TextEditor::textColourId, Colours::green);
+        getLookAndFeel().setColour (TextEditor::backgroundColourId, Colour (20, 20, 20));
+        setMultiLine (true, false);
+        setFont (Font (12, 1));
+        setSize (600, 300);
+    }
+    
+    void setText (const String text)
+    {
+        insertTextAtCaret (text);
+        setCaretPosition (getText().length());
+    }
+};
+
 class CsoundOutputWindow    : public DocumentWindow
 {
     TextEditor console;
@@ -22,6 +41,7 @@ public:
         console.setMultiLine (true, false);
         setResizable (true, true);
         console.setFont (Font (12, 1));
+        console.setReadOnly(true);
         console.setSize (600, 300);
         setContentOwned (&console, true);
         setAlwaysOnTop (true);
@@ -248,6 +268,11 @@ public:
         player.setProcessor (nullptr);
     }
 
+    //==============================================================================
+    void showFileMenu()
+    {
+
+    }
     //==============================================================================
     /** Shows an audio properties dialog box modally. */
     void showAudioSettingsDialog()
