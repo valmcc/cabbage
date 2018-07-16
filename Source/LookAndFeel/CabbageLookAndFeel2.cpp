@@ -227,7 +227,9 @@ void CabbageLookAndFeel2::drawGroupComponentOutline (Graphics& g, int w, int h, 
     //----- Text
     String name = group.getText();
     Font font = CabbageUtilities::getTitleFont();
-#ifndef MACOSX
+    
+    
+#if !defined(MACOSX) && !defined(JUCE_IOS)
     font.setFallbackFontName ("Verdana");
 #endif
     g.setFont (font);
