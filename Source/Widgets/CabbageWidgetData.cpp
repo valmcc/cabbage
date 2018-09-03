@@ -101,6 +101,9 @@ void CabbageWidgetData::setWidgetState (ValueTree widgetData, String lineFromCsd
     else if (strTokens[0].trim() == String(CabbageWidgetTypes::label))
         setLabelProperties (widgetData, ID);
 
+    else if (strTokens[0].trim() == String(CabbageWidgetTypes::listbox))
+        setListBoxProperties (widgetData, ID);
+
     else if (strTokens[0].trim() == String(CabbageWidgetTypes::texteditor))
         setTextEditorProperties (widgetData, ID);
 
@@ -493,6 +496,7 @@ void CabbageWidgetData::setCustomWidgetState (ValueTree widgetData, String lineO
             case HashStringToInt ("keyseparatorcolour"):
             case HashStringToInt ("blacknotecolour"):
             case HashStringToInt ("whitenotecolour"):
+            case HashStringToInt ("keydowncolour"):
             case HashStringToInt ("mouseoeverkeycolour"):
             case HashStringToInt ("arrowbackgroundcolour"):
             case HashStringToInt ("arrowcolour"):
@@ -771,7 +775,7 @@ void CabbageWidgetData::setColourByNumber (StringArray strTokens, ValueTree widg
 
     else if (identifier == "fontcolour")
     {
-        setProperty (widgetData, CabbageIdentifierIds::onfontcolour, getColourFromText (strTokens.joinIntoString (",")).toString());
+        //setProperty (widgetData, CabbageIdentifierIds::onfontcolour, getColourFromText (strTokens.joinIntoString (",")).toString());
         setProperty (widgetData, CabbageIdentifierIds::fontcolour, getColourFromText (strTokens.joinIntoString (",")).toString());
 
     }
@@ -847,7 +851,7 @@ void CabbageWidgetData::setBounds (StringArray strTokens, ValueTree widgetData)
 {
     if (strTokens.size() < 4)
     {
-        CabbageUtilities::debug ("Not enough paramters passed to bounds(): usage pos(top, left width, height\")\n");
+        //CabbageUtilities::debug ("Not enough paramters passed to bounds(): usage pos(top, left width, height\")\n");
     }
     else
     {

@@ -339,10 +339,6 @@ void CabbageMainComponent::changeListenerCallback (ChangeBroadcaster* source)
         {
             resized();
             ValueTree widgetData = editor->getValueTreesForCurrentlySelectedComponents()[0];
-            CabbageUtilities::debug(CabbageWidgetData::getStringProp(widgetData, CabbageIdentifierIds::type));
-            CabbageUtilities::debug(CabbageWidgetData::getBounds(widgetData).toString());
-            CabbageUtilities::debug(CabbageWidgetData::getStringProp(widgetData, CabbageIdentifierIds::plant));
-            CabbageUtilities::debug("linenUmber:", CabbageWidgetData::getNumProp(widgetData, CabbageIdentifierIds::linenumber));
             const String typeOfWidget = CabbageWidgetData::getStringProp(widgetData, CabbageIdentifierIds::type);
             CabbageLayoutWidgetStrings layoutWidgets;
             CabbageControlWidgetStrings controlWidgets;
@@ -385,10 +381,6 @@ void CabbageMainComponent::changeListenerCallback (ChangeBroadcaster* source)
             }
             else
             {
-                CabbageUtilities::debug(CabbageWidgetData::getStringProp(widgetData, CabbageIdentifierIds::type));
-                CabbageUtilities::debug(CabbageWidgetData::getBounds(widgetData).toString());
-                CabbageUtilities::debug(
-                        CabbageWidgetData::getNumProp(widgetData, CabbageIdentifierIds::surrogatelinenumber));
                 int lineNumberOfCustomPlant = CabbageWidgetData::getNumProp(widgetData,
                                                                             CabbageIdentifierIds::surrogatelinenumber);
                 const Rectangle<int> rect = CabbageWidgetData::getBounds(widgetData);
@@ -507,9 +499,13 @@ void CabbageMainComponent::updateCodeInEditor (CabbagePluginEditor* editor, bool
             int lineNumber = 0;
             Range<int> cabbageSection = CabbageUtilities::getCabbageSectionRange(getCurrentCodeEditor()->getAllText());
 
-            if (CabbageWidgetData::getNumProp(wData, CabbageIdentifierIds::linenumber) >= 0 && CabbageWidgetData::getNumProp(wData, CabbageIdentifierIds::surrogatelinenumber)<=0)
+            if (CabbageWidgetData::getNumProp(wData, CabbageIdentifierIds::linenumber) >= 1 && CabbageWidgetData::getNumProp(wData, CabbageIdentifierIds::surrogatelinenumber)<=0)
             {
-
+                CabbageUtilities::debug(CabbageWidgetData::getStringProp(wData, CabbageIdentifierIds::type));
+                CabbageUtilities::debug(CabbageWidgetData::getBounds(wData).toString());
+                CabbageUtilities::debug(CabbageWidgetData::getStringProp(wData, CabbageIdentifierIds::plant));
+                CabbageUtilities::debug("linenUmber:", CabbageWidgetData::getNumProp(wData, CabbageIdentifierIds::linenumber));
+                
                 lineNumber = jmin(cabbageSection.getEnd(),
                                   int(CabbageWidgetData::getNumProp(wData, CabbageIdentifierIds::linenumber)));
                 const String type = CabbageWidgetData::getStringProp(wData, CabbageIdentifierIds::type);
