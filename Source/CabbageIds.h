@@ -95,6 +95,7 @@ namespace CommandIDs
         batchConvertExamplesAU    = 0x612001,
         batchConvertExamplesVST    = 0x612003,
         showConsole                 = 0x612004,
+		startLiverServer		= 0x612005,
 
         lastCommandIDEntry
     };

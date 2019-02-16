@@ -74,6 +74,31 @@ public:
         bringCodeEditorToFront(file);
 	}
 
+	void toggleLiverServer()
+	{
+		if (processNode.isRunning() || processChrome.isRunning())
+		{
+			processNode.kill();
+			processChrome.kill();
+			return;
+		}
+
+		StringArray chrome;
+		chrome.add("C:\\Program Files (x86)\\\Google\\Chrome\\Application\\Chrome.exe");
+		chrome.add(" --enable-logging --v=1");
+		if (!processChrome.start(chrome))
+			jassertfalse;
+
+		const String file = File::getSpecialLocation(File::userApplicationDataDirectory).getFullPathName()+"\\npm\\node_modules\\live-server\\live-server.js";
+		getCurrentCsdFile().getParentDirectory().setAsCurrentWorkingDirectory();
+		if(!processNode.start("node "+file))
+			jassertfalse;
+
+		startTimer(500);
+		CabbageUtilities::debug(processChrome.readAllProcessOutput());
+
+	}
+
 	void fileDoubleClicked(const File&)              override {}
 	void browserRootChanged(const File&)             override {}
 
@@ -271,7 +296,7 @@ public:
 private:
 
 
-
+	ChildProcess processNode, processChrome;
     int getTabFileIndex (int32 nodeId);
     int getTabFileIndex (File file);
     OwnedArray<FileTab> fileTabs;

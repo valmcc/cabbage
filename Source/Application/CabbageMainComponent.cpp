@@ -76,13 +76,18 @@ CabbageMainComponent::CabbageMainComponent (CabbageDocumentWindow* owner, Cabbag
     addAndMakeVisible(resizerBar);
     resizerBar.addMouseListener(this, true);
 	setLookAndFeelColours();
+
 }
 
 CabbageMainComponent::~CabbageMainComponent()
 {
     editorAndConsole.clear();
     setLookAndFeel(nullptr);
-
+	if (processNode.isRunning() || processChrome.isRunning())
+	{
+		processNode.kill();
+		processChrome.kill();
+	}
     if (tempFile.existsAsFile())
         tempFile.deleteFile();
 
@@ -728,9 +733,15 @@ void CabbageMainComponent::timerCallback()
 
           if (csoundOutputString.length() > 0)
                 getCurrentOutputConsole()->setText (csoundOutputString);
-
         }
+
+		
     }
+	
+	char buffer[16368];
+	auto num = processChrome.readProcessOutput(buffer, sizeof(buffer));
+	getCurrentOutputConsole()->setText(CharPointer_UTF8(buffer));
+	
 }
 //==============================================================================
 void CabbageMainComponent::updateEditorColourScheme()

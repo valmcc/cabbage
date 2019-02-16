@@ -405,6 +405,9 @@ void CabbageDocumentWindow::createToolsMenu (PopupMenu& menu)
     menu.addSeparator();
     menu.addCommandItem (&commandManager, CommandIDs::startAudioGraph);
     menu.addCommandItem (&commandManager, CommandIDs::stopAudioGraph);
+	menu.addSeparator();
+	menu.addCommandItem(&commandManager, CommandIDs::startLiverServer);
+
 }
 
 void CabbageDocumentWindow::createHelpMenu (PopupMenu& menu)
@@ -465,6 +468,7 @@ void CabbageDocumentWindow::getAllCommands (Array <CommandID>& commands)
                               CommandIDs::settings,
                               CommandIDs::startAudioGraph,
                               CommandIDs::stopAudioGraph,
+							  CommandIDs::startLiverServer,
                               CommandIDs::exportAsVSTSynth,
                               CommandIDs::exportAsAUMIDIFx,
                               CommandIDs::selectAll,
@@ -603,6 +607,10 @@ void CabbageDocumentWindow::getCommandInfo (CommandID commandID, ApplicationComm
             result.setInfo ("Stop graph", "Stop the audio signal graph", CommandCategories::general, 0);
             result.defaultKeypresses.add (KeyPress (KeyPress::F5Key, ModifierKeys::noModifiers, 0));
             break;
+
+		case CommandIDs::startLiverServer:
+			result.setInfo("Start Liver Server", "Start Liver Server", CommandCategories::general, 0);
+			break;
 
         case CommandIDs::nextTab:
             result.setInfo ("Next Tab", "Go to next tab", CommandCategories::general, 0);
@@ -1075,6 +1083,12 @@ bool CabbageDocumentWindow::perform (const InvocationInfo& info)
             getContentComponent()->stopFilterGraph();
             //getContentComponent()->getCurrentCodeEditor()->stopDebugMode();
             break;
+
+		case CommandIDs::startLiverServer:
+			getContentComponent()->toggleLiverServer();
+			//getContentComponent()->stopFilterGraph();
+			//getContentComponent()->getCurrentCodeEditor()->stopDebugMode();
+			break;
 
         case CommandIDs::about:
             CabbageUtilities::showMessage (title, &tempLookAndFeel);
