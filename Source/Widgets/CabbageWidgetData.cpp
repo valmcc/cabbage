@@ -164,6 +164,9 @@ void CabbageWidgetData::setWidgetState (ValueTree widgetData, String lineFromCsd
 
     else if (strTokens[0].trim() == String(CabbageWidgetTypes::eventsequencer))
         setEventSequencerProperties (widgetData, ID);
+    
+    else if (strTokens[0].trim() == String(CabbageWidgetTypes::graphics))
+        setGraphicsProperties (widgetData, ID);
 
     //===============table==================//
     else if (strTokens[0].trim() == String(CabbageWidgetTypes::table))

@@ -52,6 +52,7 @@
 #include "../../Widgets/CabbageRangeSlider.h"
 #include "../../Widgets/CabbageCustomWidgets.h"
 #include "../../Widgets/CabbageEventSequencer.h"
+#include "../../Widgets/CabbageGraphics.h"
 
 class CabbagePluginEditor;
 
@@ -122,6 +123,8 @@ public:
     void insertPort (ValueTree cabbageWidgetData);
     void insertScrew (ValueTree cabbageWidgetData);
     void insertLight (ValueTree cabbageWidgetData);
+    
+    void insertGraphics (ValueTree cabbageWidgetData);
     
     void addMouseListenerAndSetVisibility (Component* comp, ValueTree wData);
     //=============================================================================
