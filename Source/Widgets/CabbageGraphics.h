@@ -23,6 +23,7 @@
 
 #pragma once
 
+class CabbagePluginEditor;
 
 class CabbageGraphics : public Component, public ValueTree::Listener, public CabbageWidgetBase
 {
@@ -31,10 +32,11 @@ class CabbageGraphics : public Component, public ValueTree::Listener, public Cab
     Colour outlineColour, mainColour;
     Image img;
     String svgText;
+    
 
 public:
-
-    CabbageGraphics (ValueTree cAttr);
+    CabbagePluginEditor* owner;
+    CabbageGraphics (ValueTree cAttr, CabbagePluginEditor* owner);
     ~CabbageGraphics() {};
 
     void valueTreePropertyChanged (ValueTree& valueTree, const Identifier&)  override;

@@ -69,6 +69,8 @@ void CsoundPluginProcessor::resetCsound()
 bool CsoundPluginProcessor::setupAndCompileCsound(File csdFile, File filePath, int sr, bool isMono, bool debugMode)
 {
 	csound.reset (new Csound());
+    
+
 	csdFilePath = filePath;
 	csdFilePath.setAsCurrentWorkingDirectory();
 	csound->SetHostImplementedMIDIIO(true);
@@ -141,6 +143,17 @@ bool CsoundPluginProcessor::setupAndCompileCsound(File csdFile, File filePath, i
 
 	if (csdCompiledWithoutError())
 	{
+        csound->CreateGlobalVariable("graphics1", sizeof(Graphics*));
+        Graphics* gc = (Graphics*)csound->QueryGlobalVariable("graphics1");
+        if (gc != NULL)
+        {
+            Image image(Image::RGB, 100, 100, true);
+            Graphics* graphics = new Graphics(image);
+            gc = graphics;
+        }
+        
+        
+        
 		csdKsmps = csound->GetKsmps();
 		CSspout = csound->GetSpout();
 		CSspin = csound->GetSpin();

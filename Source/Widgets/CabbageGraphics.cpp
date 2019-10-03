@@ -19,9 +19,11 @@
 
 
 #include "CabbageGraphics.h"
+#include "../Audio/Plugins/CabbagePluginEditor.h"
 
-CabbageGraphics::CabbageGraphics (ValueTree wData) : CabbageWidgetBase(),
-widgetData (wData)
+CabbageGraphics::CabbageGraphics (ValueTree wData, CabbagePluginEditor* owner) : CabbageWidgetBase(),
+widgetData (wData),
+owner(owner)
 {
     widgetData.addListener (this);
 

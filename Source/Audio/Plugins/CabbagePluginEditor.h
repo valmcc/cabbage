@@ -125,7 +125,7 @@ public:
     void insertLight (ValueTree cabbageWidgetData);
     
     void insertGraphics (ValueTree cabbageWidgetData);
-    
+    Csound* getCsound();
     void addMouseListenerAndSetVisibility (Component* comp, ValueTree wData);
     //=============================================================================
 	void refreshValueTreeListeners();

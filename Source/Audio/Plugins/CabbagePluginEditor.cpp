@@ -597,7 +597,7 @@ void CabbagePluginEditor::insertLight (ValueTree cabbageWidgetData)
 void CabbagePluginEditor::insertGraphics (ValueTree cabbageWidgetData)
 {
     CabbageGraphics* gc;
-    components.add (gc = new CabbageGraphics (cabbageWidgetData));
+    components.add (gc = new CabbageGraphics (cabbageWidgetData, this));
     addToEditorAndMakeVisible (gc, cabbageWidgetData);
     addMouseListenerAndSetVisibility (gc, cabbageWidgetData);
 }
@@ -925,6 +925,13 @@ float CabbagePluginEditor::getChannelDataFromCsound (String channel)
         return processor.getCsound()->GetChannel (channel.getCharPointer());
     
     return 0;
+}
+
+Csound* CabbagePluginEditor::getCsound()
+{
+    if (processor.csdCompiledWithoutError())
+        return processor.getCsound();
+    return nullptr;
 }
 
 void CabbagePluginEditor::sendChannelStringDataToCsound (String channel, String value)
