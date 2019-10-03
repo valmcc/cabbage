@@ -106,7 +106,7 @@ public:
     //==============================================================================
     StringArray cabbageScriptGeneratedCode;
     Array<PlantImportStruct> plantStructs;
-
+    
     int64 csdLastModifiedAt;
     void timerCallback() override;
 	//uid needed for Cabbage host
@@ -123,6 +123,7 @@ public:
 		csdArray.addLines(csdFile.loadFileAsString());
 		return csdArray;
 	}
+        
 private:
     controlChannelInfo_s* csoundChanList;
     int numberOfLinesInPlantCode = 0;

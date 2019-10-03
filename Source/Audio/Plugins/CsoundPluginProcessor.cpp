@@ -143,18 +143,12 @@ bool CsoundPluginProcessor::setupAndCompileCsound(File csdFile, File filePath, i
 
 	if (csdCompiledWithoutError())
 	{
-        csound->CreateGlobalVariable("graphics1", sizeof(Graphics*));
-        Graphics* gc = (Graphics*)csound->QueryGlobalVariable("graphics1");
-        if (gc != NULL)
-        {
-            Image image(Image::RGB, 100, 100, true);
-            Graphics* graphics = new Graphics(image);
-            gc = graphics;
-        }
+        csound->CreateGlobalVariable("graphics1", sizeof(Image*));
+        Image** gc = (Image**)csound->QueryGlobalVariable("graphics1");
+        *gc = new Image(Image::RGB, 300, 400, true);//image;
+
         
-        
-        
-		csdKsmps = csound->GetKsmps();
+        csdKsmps = csound->GetKsmps();
 		CSspout = csound->GetSpout();
 		CSspin = csound->GetSpin();
 		cs_scale = csound->Get0dBFS();

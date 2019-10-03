@@ -223,7 +223,6 @@ public:
     OwnedArray<MatrixEventSequencer> matrixEventSequencers;
     OwnedArray <SignalDisplay, CriticalSection> signalArrays;   //holds values from FFT function table created using dispfft
     CsoundPluginProcessor::SignalDisplay* getSignalArray (String variableName, String displayType = "");
-
   
 private:
     //==============================================================================

@@ -32,10 +32,11 @@ class CabbageGraphics : public Component, public ValueTree::Listener, public Cab
     Colour outlineColour, mainColour;
     Image img;
     String svgText;
-    
+    Image emptyImage;
 
 public:
     CabbagePluginEditor* owner;
+    const Image getImage();
     CabbageGraphics (ValueTree cAttr, CabbagePluginEditor* owner);
     ~CabbageGraphics() {};
 
