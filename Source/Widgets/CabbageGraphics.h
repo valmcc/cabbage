@@ -25,7 +25,7 @@
 
 class CabbagePluginEditor;
 
-class CabbageGraphics : public Component, public ValueTree::Listener, public CabbageWidgetBase
+class CabbageGraphics : public Component, public Timer, public ValueTree::Listener, public CabbageWidgetBase
 {
     String name, tooltipText, shape;
     ValueTree widgetData;
@@ -33,10 +33,11 @@ class CabbageGraphics : public Component, public ValueTree::Listener, public Cab
     Image img;
     String svgText;
     Image emptyImage;
+    void timerCallback() override;
 
 public:
     CabbagePluginEditor* owner;
-    const Image getImage();
+    const Image* getImage();
     CabbageGraphics (ValueTree cAttr, CabbagePluginEditor* owner);
     ~CabbageGraphics() {};
 

@@ -25,36 +25,36 @@
 CabbageGraphics::CabbageGraphics (ValueTree wData, CabbagePluginEditor* owner) : CabbageWidgetBase(),
 widgetData (wData),
 owner(owner)
+
 {
     widgetData.addListener (this);
-    
+    startTimer(100);
     this->setWantsKeyboardFocus (false);
     initialiseCommonAttributes (this, wData);
-//    if(CabbagePluginProcessor* proc = dynamic_cast<CabbagePluginProcessor*>(&owner->getProcessor()))
-//    {
-//        Image** gc = (Image**)proc->getCsound()->QueryGlobalVariable("graphics1");
-//        if(*gc != NULL)
-//            image = *gc;
-//    }
 }
 
+void CabbageGraphics::timerCallback()
+{
+    repaint();
+}
 //==============================================================================
 void CabbageGraphics::paint (Graphics& g)
 {
     g.fillAll(Colours::black);
-    g.drawImageAt(getImage(), 0, 0);
+    g.drawImageAt(*getImage(), 0, 0);
 }
 
-const Image CabbageGraphics::getImage()
+const Image* CabbageGraphics::getImage()
 {
     if(CabbagePluginProcessor* proc = dynamic_cast<CabbagePluginProcessor*>(&owner->getProcessor()))
     {
+
         Image** gc = (Image**)proc->getCsound()->QueryGlobalVariable("graphics1");
         if(*gc != NULL)
-            return **gc;
+            return *gc;
     }
 
-    return emptyImage;
+    return nullptr;
 }
 //==============================================================================
 void CabbageGraphics::valueTreePropertyChanged (ValueTree& valueTree, const Identifier& prop)
