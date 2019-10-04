@@ -27,6 +27,7 @@ class CabbagePluginEditor;
 
 class CabbageGraphics : public Component, public Timer, public ValueTree::Listener, public CabbageWidgetBase
 {
+    
     String name, tooltipText, shape;
     ValueTree widgetData;
     Colour outlineColour, mainColour;
@@ -36,8 +37,12 @@ class CabbageGraphics : public Component, public Timer, public ValueTree::Listen
     void timerCallback() override;
 
 public:
+    OpenGLContext openGLContext;
     CabbagePluginEditor* owner;
-    const Image* getImage();
+    Image image;
+    Image* getImage();
+    int x = 0;
+    Graphics myGc;
     CabbageGraphics (ValueTree cAttr, CabbagePluginEditor* owner);
     ~CabbageGraphics() {};
 

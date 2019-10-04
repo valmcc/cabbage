@@ -24,33 +24,41 @@
 
 CabbageGraphics::CabbageGraphics (ValueTree wData, CabbagePluginEditor* owner) : CabbageWidgetBase(),
 widgetData (wData),
-owner(owner)
-
+owner(owner),
+image(Image::RGB, 300, 400, true),
+myGraphics(image)
 {
+    if (auto* peer = getPeer())
+        peer->setCurrentRenderingEngine (0);
+    
+    openGLContext.attachTo (*this);
+   
     widgetData.addListener (this);
-    startTimer(100);
+    startTimer(10);
     this->setWantsKeyboardFocus (false);
     initialiseCommonAttributes (this, wData);
 }
 
 void CabbageGraphics::timerCallback()
 {
+    myGc.fillAll(Colours::red);
+    myGc.setColour(Colours::green);
+    myGc.fillEllipse(x+=10, 10, 10, 10);
     repaint();
 }
 //==============================================================================
 void CabbageGraphics::paint (Graphics& g)
 {
-    g.fillAll(Colours::black);
-    g.drawImageAt(*getImage(), 0, 0);
+    g.drawImageAt(image, 0, 0);
 }
 
-const Image* CabbageGraphics::getImage()
+Image* CabbageGraphics::getImage()
 {
     if(CabbagePluginProcessor* proc = dynamic_cast<CabbagePluginProcessor*>(&owner->getProcessor()))
     {
 
         Image** gc = (Image**)proc->getCsound()->QueryGlobalVariable("graphics1");
-        if(*gc != NULL)
+        if(*gc)
             return *gc;
     }
 
