@@ -129,11 +129,11 @@ bool CsoundPluginProcessor::setupAndCompileCsound(File csdFile, File filePath, i
 	csoundParams->sample_rate_override = requestedSampleRate>0 ? requestedSampleRate : sr;
 
 	csound->SetParams(csoundParams.get());
+//
+//    csound->CreateGlobalVariable("component", sizeof(Component*));
+//    Component** gc = (Component**)csound->QueryGlobalVariable("component");
+//    *gc = new Component("Hello");
 
-    csound->CreateGlobalVariable("graphics1", sizeof(Image*));
-    Image** gc = (Image**)csound->QueryGlobalVariable("graphics1");
-    *gc = new Image(Image::RGB, 300, 400, true);//image;
-    
 	if (csdFile.loadFileAsString().contains("<Csound") || csdFile.loadFileAsString().contains("</Csound"))
 		compileCsdFile(csdFile);
 	else

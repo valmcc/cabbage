@@ -35,19 +35,21 @@ class CabbageGraphics : public Component, public Timer, public ValueTree::Listen
     String svgText;
     Image emptyImage;
     void timerCallback() override;
-
-public:
     OpenGLContext openGLContext;
+public:
+    Component* mainComp;
+    LowLevelGraphicsContext* glRenderer;
+    void createImage();
     CabbagePluginEditor* owner;
-    Image image;
-    Image* getImage();
-    int x = 0;
-    Graphics myGc;
+    const Image* getImage();
     CabbageGraphics (ValueTree cAttr, CabbagePluginEditor* owner);
     ~CabbageGraphics() {};
+    void resized() override;
+
+
 
     void valueTreePropertyChanged (ValueTree& valueTree, const Identifier&)  override;
-    void paint (Graphics& g) override;
+    void drawToOpenGL();
 
     void valueTreeChildAdded (ValueTree&, ValueTree&) override {}
     void valueTreeChildRemoved (ValueTree&, ValueTree&, int) override {}

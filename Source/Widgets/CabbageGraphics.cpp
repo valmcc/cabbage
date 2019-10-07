@@ -24,35 +24,86 @@
 
 CabbageGraphics::CabbageGraphics (ValueTree wData, CabbagePluginEditor* owner) : CabbageWidgetBase(),
 widgetData (wData),
-owner(owner),
-image(Image::RGB, 300, 400, true),
-myGraphics(image)
+owner(owner)
 {
-    if (auto* peer = getPeer())
-        peer->setCurrentRenderingEngine (0);
-    
-    openGLContext.attachTo (*this);
-   
+
+    addAndMakeVisible(mainComp = new Component());
+    startTimer(100);
+
+//    openGLContext.setContinuousRepainting (true);
+
+    if(CabbagePluginProcessor* proc = dynamic_cast<CabbagePluginProcessor*>(&owner->getProcessor()))
+    {
+        proc->getCsound()->CreateGlobalVariable("component", sizeof(Component*));
+        Component** gc = (Component **) proc->getCsound()->QueryGlobalVariable("component");
+        *gc = mainComp;
+
+
+    }
+
+
     widgetData.addListener (this);
-    startTimer(10);
-    this->setWantsKeyboardFocus (false);
     initialiseCommonAttributes (this, wData);
 }
 
+void CabbageGraphics::createImage()
+{
+
+}
 void CabbageGraphics::timerCallback()
 {
-    myGc.fillAll(Colours::red);
-    myGc.setColour(Colours::green);
-    myGc.fillEllipse(x+=10, 10, 10, 10);
     repaint();
 }
-//==============================================================================
-void CabbageGraphics::paint (Graphics& g)
+
+void CabbageGraphics::resized()
 {
-    g.drawImageAt(image, 0, 0);
+    mainComp->setBounds(getLocalBounds());
 }
 
-Image* CabbageGraphics::getImage()
+
+//void CabbageGraphics::renderOpenGL()
+//{
+//    glEnable (GL_DEPTH_TEST);
+//    glDepthFunc (GL_LESS);
+//    glEnable (GL_BLEND);
+//    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    openGLContext.extensions.glActiveTexture (GL_TEXTURE0);
+//    glEnable (GL_TEXTURE_2D);
+//
+//    glViewport (0, 0, roundToInt (getWidth()), roundToInt (getHeight()));
+//
+//
+//    glBegin(GL_POLYGON);
+//    glColor3d(255,0,0);
+//    int x1 = 20;
+//    int y1 = 20;
+//    double halfside = 40 / 2;
+//    glVertex2d(x1 + halfside, y1 + halfside);
+//    glVertex2d(x1 + halfside, y1 - halfside);
+//    glVertex2d(x1 - halfside, y1 - halfside);
+//    glVertex2d(x1 - halfside, y1 + halfside);
+//    glEnd();
+//    drawToOpenGL();
+//}
+//==============================================================================
+void CabbageGraphics::drawToOpenGL()
+{
+    std::unique_ptr<LowLevelGraphicsContext> glRenderer (createOpenGLGraphicsContext (openGLContext,
+                                                                                      getWidth(),
+                                                                                      getHeight()));
+        if (glRenderer.get() != nullptr)
+        {
+            Graphics g(*glRenderer);
+//            Random rand;
+//            g.fillAll(Colours::red);
+//            g.setColour(Colours::white);
+//            g.fillEllipse(rand.nextFloat()*100, 50, 10, 10);
+//            g.drawImageAt(*getImage(), 0, 0);
+        }
+}
+
+
+const Image* CabbageGraphics::getImage()
 {
     if(CabbagePluginProcessor* proc = dynamic_cast<CabbagePluginProcessor*>(&owner->getProcessor()))
     {
