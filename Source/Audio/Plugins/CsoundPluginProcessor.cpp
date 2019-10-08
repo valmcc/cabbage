@@ -130,9 +130,9 @@ bool CsoundPluginProcessor::setupAndCompileCsound(File csdFile, File filePath, i
 
 	csound->SetParams(csoundParams.get());
 //
-//    csound->CreateGlobalVariable("component", sizeof(Component*));
-//    Component** gc = (Component**)csound->QueryGlobalVariable("component");
-//    *gc = new Component("Hello");
+    csound->CreateGlobalVariable("component", sizeof(Component*));
+    Component** gc = (Component**)csound->QueryGlobalVariable("component");
+    *gc = new Component();
 
 	if (csdFile.loadFileAsString().contains("<Csound") || csdFile.loadFileAsString().contains("</Csound"))
 		compileCsdFile(csdFile);
