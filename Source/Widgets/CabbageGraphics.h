@@ -25,7 +25,8 @@
 
 class CabbagePluginEditor;
 
-class CabbageGraphics : public Component, public Timer, public ValueTree::Listener, public CabbageWidgetBase
+
+class CabbageGraphics : public Component, public Timer, public OpenGLRenderer, public ValueTree::Listener, public CabbageWidgetBase
 {
     
     String name, tooltipText, shape;
@@ -36,6 +37,7 @@ class CabbageGraphics : public Component, public Timer, public ValueTree::Listen
     Image emptyImage;
     void timerCallback() override;
     Component** gc;
+    OpenGLContext openGLContext;
 public:
 //    Component* mainComp;
 //    LowLevelGraphicsContext* glRenderer;
@@ -49,10 +51,17 @@ public:
     };
     void resized() override;
 
+    void newOpenGLContextCreated() override
+    {
+     
+    };
 
+    void openGLContextClosing() override
+    {
+    }
 
     void valueTreePropertyChanged (ValueTree& valueTree, const Identifier&)  override;
-    void drawToOpenGL();
+    void renderOpenGL() override;
 
     void valueTreeChildAdded (ValueTree&, ValueTree&) override {}
     void valueTreeChildRemoved (ValueTree&, ValueTree&, int) override {}
@@ -66,5 +75,3 @@ public:
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CabbageGraphics);
 };
-
-

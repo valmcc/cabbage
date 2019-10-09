@@ -133,6 +133,10 @@ bool CsoundPluginProcessor::setupAndCompileCsound(File csdFile, File filePath, i
     csound->CreateGlobalVariable("component", sizeof(Component*));
     Component** gc = (Component**)csound->QueryGlobalVariable("component");
     *gc = new Component();
+    
+    csound->CreateGlobalVariable("context", sizeof(OpenGLContext*));
+    OpenGLContext** openGL = (OpenGLContext**)csound->QueryGlobalVariable("context");
+    *openGL = new OpenGLContext();
 
 	if (csdFile.loadFileAsString().contains("<Csound") || csdFile.loadFileAsString().contains("</Csound"))
 		compileCsdFile(csdFile);

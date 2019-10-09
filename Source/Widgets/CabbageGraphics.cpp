@@ -28,9 +28,8 @@ CabbageGraphics::CabbageGraphics (ValueTree wData, CabbagePluginEditor* owner) :
 {
 
 // addAndMakeVisible(mainComp = new Component());
-//    startTimer(100);
-
-// openGLContext.setContinuousRepainting (true);
+    startTimer(10);
+//
 
     if(CabbagePluginProcessor* proc = dynamic_cast<CabbagePluginProcessor*>(&owner->getProcessor()))
     {
@@ -39,7 +38,12 @@ CabbageGraphics::CabbageGraphics (ValueTree wData, CabbagePluginEditor* owner) :
 
     }
 
+//    openGLContext.setRenderer(this);
+    
+    
     addAndMakeVisible(*gc);
+    openGLContext.attachTo(**gc);
+    openGLContext.setContinuousRepainting (true);
     widgetData.addListener (this);
     initialiseCommonAttributes (this, wData);
 }
@@ -48,10 +52,17 @@ void CabbageGraphics::createImage()
 {
 
 }
+
+void CabbageGraphics::renderOpenGL()
+{
+//    static_cast<OpenGLWindow*>(*gc)->drawToOpenGL(openGLContext);
+//    static_cast<Component*>(*gc)->repaint();
+}
+
 void CabbageGraphics::timerCallback()
 {
+    static_cast<Component*>(*gc)->repaint();
     repaint();
-// repaint();
 }
 
 void CabbageGraphics::resized()
@@ -85,9 +96,9 @@ void CabbageGraphics::resized()
 // drawToOpenGL();
 //}
 //==============================================================================
-void CabbageGraphics::drawToOpenGL()
-{
-// std::unique_ptr<LowLevelGraphicsContext> glRenderer (createOpenGLGraphicsContext (openGLContext,
+//void CabbageGraphics::drawToOpenGL(OpenGLContext openGL)
+//{
+//std::unique_ptr<LowLevelGraphicsContext> glRenderer (createOpenGLGraphicsContext (openGLContext,
 // getWidth(),
 // getHeight()));
 // if (glRenderer.get() != nullptr)
@@ -99,7 +110,7 @@ void CabbageGraphics::drawToOpenGL()
 // g.fillEllipse(rand.nextFloat()*100, 50, 10, 10);
 // g.drawImageAt(*getImage(), 0, 0);
 // }
-}
+//}
 
 
 const Image* CabbageGraphics::getImage()
