@@ -28,6 +28,7 @@ class CabbagePluginEditor;
 
 class CabbageGraphics : public Component, public Timer, public OpenGLRenderer, public ValueTree::Listener, public CabbageWidgetBase
 {
+        GLuint vertexbuffer;
     
     String name, tooltipText, shape;
     ValueTree widgetData;
@@ -39,11 +40,10 @@ class CabbageGraphics : public Component, public Timer, public OpenGLRenderer, p
     Component** gc;
     OpenGLContext openGLContext;
 public:
-//    Component* mainComp;
-//    LowLevelGraphicsContext* glRenderer;
+
     void createImage();
     CabbagePluginEditor* owner;
-    const Image* getImage();
+ 
     CabbageGraphics (ValueTree cAttr, CabbagePluginEditor* owner);
     ~CabbageGraphics()
     {
@@ -51,17 +51,12 @@ public:
     };
     void resized() override;
 
-    void newOpenGLContextCreated() override
-    {
-     
-    };
-
-    void openGLContextClosing() override
-    {
-    }
-
-    void valueTreePropertyChanged (ValueTree& valueTree, const Identifier&)  override;
+    void newOpenGLContextCreated() override;
+    void openGLContextClosing() override;
     void renderOpenGL() override;
+    
+    void valueTreePropertyChanged (ValueTree& valueTree, const Identifier&)  override;
+    
 
     void valueTreeChildAdded (ValueTree&, ValueTree&) override {}
     void valueTreeChildRemoved (ValueTree&, ValueTree&, int) override {}

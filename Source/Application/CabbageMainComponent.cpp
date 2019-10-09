@@ -1807,7 +1807,7 @@ int CabbageMainComponent::testFileForErrors (String file)
     {
         const String output = process.readAllProcessOutput();
 
-        process.start (processName + " " + file);
+        process.start (processName + " \"" + file + "\"");
         process.waitForProcessToFinish(400);
 
         const int exitCode = process.getExitCode();
