@@ -27,9 +27,7 @@
 #include <cwindow.h>
 #include "../../Utilities/CabbageUtilities.h"
 #include "CabbageCsoundBreakpointData.h"
-#ifdef CabbagePro
-#include "../../Utilities/encrypt.h"
-#endif
+
 
 //==============================================================================
 class CsoundPluginProcessor : public AudioProcessor, public AsyncUpdater
