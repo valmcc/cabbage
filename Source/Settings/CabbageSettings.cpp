@@ -64,7 +64,7 @@ void CabbageSettings::setDefaultSettings()
 #endif
 
 #ifdef CabbagePro
-    defaultPropSet->setValue ("CsoundPath", "/Library/Frameworks/CsoundLib64.framework/CsoundLib64"); 
+    defaultPropSet->setValue ("CsoundPath", "C:\\Program Files\\Csound6_x64\\lib"); 
 #endif
     
     defaultPropSet->setValue ("AudioEnabled", 1);
