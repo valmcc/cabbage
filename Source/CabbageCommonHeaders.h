@@ -25,7 +25,7 @@
 #pragma warning(disable: 4100)
 #pragma warning(disable: 4305)
 #endif
-
+#define CabbagePro
 #define CABBAGE_VERSION "Cabbage(64bit) v2.1.06beta"
 #include "./Settings/CabbageSettings.h"
 #include "LookAndFeel/CabbageIDELookAndFeel.h"
