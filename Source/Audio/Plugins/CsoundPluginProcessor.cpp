@@ -198,7 +198,7 @@ bool CsoundPluginProcessor::setupAndCompileCsound(File currentCsdFile, File file
     else
 	{
 #ifdef CabbagePro
-		compileCsdString(Encrypt::decode(csdFile));
+		//compileCsdString(Encrypt::decode(csdFile));
 		csound->Start();
 #endif
 }
