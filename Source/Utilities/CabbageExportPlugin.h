@@ -39,7 +39,7 @@ public:
 
     String encodeString (File csdFile)
     {
-#ifdef CabbagePro
+#ifdef Sadness
 
         StringArray csdLines;
         csdLines.addLines(csdFile.loadFileAsString());
@@ -66,7 +66,7 @@ public:
     }
     static String decodeString (File csdFile)
     {
-#ifdef CabbagePro
+#ifdef Sadness
         return Encrypt::decode(csdFile);
 #endif
         return "";
