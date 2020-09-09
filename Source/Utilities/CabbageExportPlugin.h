@@ -22,9 +22,7 @@
 
 #include "../CabbageCommonHeaders.h"
 #include "../LookAndFeel/CabbageIDELookAndFeel.h"
-#ifdef CabbagePro
-#include "encrypt.h"
-#endif
+
 class PluginExporter
 {
     CabbageIDELookAndFeel lookAndFeel;
