@@ -179,13 +179,10 @@ bool CsoundPluginProcessor::setupAndCompileCsound(File currentCsdFile, File file
     }
     
 	
-#ifdef CabbagePro
-	const int requestedSampleRate = CabbageUtilities::getHeaderInfo(Encrypt::decode(csdFile), "sr");
-	const int requestedKsmpsRate = CabbageUtilities::getHeaderInfo(Encrypt::decode(csdFile), "ksmps");
-#else
+
 	const int requestedKsmpsRate = CabbageUtilities::getHeaderInfo(csdFile.loadFileAsString(), "ksmps");
 	const int requestedSampleRate = CabbageUtilities::getHeaderInfo(csdFile.loadFileAsString(), "sr");
-#endif
+
 	
 	if (requestedKsmpsRate == -1)
 		csoundParams->ksmps_override = 32;
